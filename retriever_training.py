@@ -67,7 +67,7 @@ def collate_fn(batch):
 class ModifiedModel(nn.Module):
     def __init__(self):
         super(ModifiedModel, self).__init__()
-        self.bert = AutoModel.from_pretrained('BAAI/bge-large-zh-v1.5', torch_dtype=torch.bfloat16)
+        self.bert = AutoModel.from_pretrained('BAAI/bge-large-en-v1.5', torch_dtype=torch.bfloat16)
         self.extra_pooler = torch.nn.Sequential(torch.nn.Linear(1024, 1024, dtype=torch.bfloat16), torch.nn.ReLU(), torch.nn.Linear(1024, 1024, dtype=torch.bfloat16))
     
     def forward(self, inputs):
@@ -78,10 +78,9 @@ class ModifiedModel(nn.Module):
     
 if __name__ == "__main__":
     accelerator = Accelerator()
-    tokenizer = AutoTokenizer.from_pretrained('BAAI/bge-large-zh-v1.5')
+    tokenizer = AutoTokenizer.from_pretrained('BAAI/bge-large-en-v1.5')
     # model = AutoModel.from_pretrained('BAAI/bge-large-zh-v1.5', torch_dtype=torch.bfloat16)
-    # model = ModifiedModel()
-    model = torch.load("/shared/xiaocong/graph_rag/bge-large-zh-v1.5_math23k_5epoch_v6_masked.pt")
+    model = ModifiedModel()
     # print all name of model parameters
     # for name, param in model.named_parameters():
     #     print(name)
@@ -89,16 +88,17 @@ if __name__ == "__main__":
     # dataset = load_dataset('json', data_files="/shared/xiaocong/math23k_english_4ksubset.jsonl", split='train')
     # dataset = load_dataset("csv", data_files="/shared/xiaocong/gsm8k_modified.csv", split="train")
     # dataset = load_dataset("Gxg/Math23K", split="train")
-    dataset = load_dataset("json", data_files="/shared/xiaocong/graph_rag/processed_math23k.jsonl", split="train")
+    dataset = load_dataset("json", data_files="/shared/xiaocong/processed_mathqa.jsonl", split="train")
     ## remove the samples with more than 10 positive samples to avoid false positive
     selected_dataset = [item for item in dataset if len(item["positive_texts"]) < 20]
-    dataloader = torch.utils.data.DataLoader(selected_dataset, batch_size=4, shuffle=True, collate_fn=collate_fn)
+    dataloader = torch.utils.data.DataLoader(selected_dataset, batch_size=3, shuffle=True, collate_fn=collate_fn)
     model, optimizer, dataloader = accelerator.prepare(model, optimizer, dataloader)
     total_loss = 0
     total_steps = 0
-    for epoch in range(1):
+    for epoch in range(10):
         for batch in tqdm(dataloader):
             total_steps += 1
+            optimizer.zero_grad()
             # calculate predicted similarity score
             # inputs = tokenizer(batch['original_text'], padding=True, truncation=True, return_tensors='pt')
             inputs = tokenizer(batch, padding=True, truncation=True, return_tensors='pt')
@@ -150,4 +150,4 @@ if __name__ == "__main__":
     # save model checkpoint
     accelerator.wait_for_everyone()
     unwrapped_model = accelerator.unwrap_model(model)
-    accelerator.save(unwrapped_model, "/shared/xiaocong/graph_rag/bge-large-zh-v1.5_math23k_6epoch_v6_masked.pt")
+    accelerator.save(unwrapped_model, "/shared/xiaocong/graph_rag/bge-large-en-v1.5_mathqa_10epoch_v1_masked.pt")

@@ -158,7 +158,7 @@ if __name__ == "__main__":
                 else:
                     for _ in range(args.topk):
                         random_index = torch.randint(0, len(train_dataset), (1,)).item()
-                        prompt.append({"role": "user", "content": [train_dataset["question"][random_index] + "\nOptions" + train_dataset["options"][random_index]]})
+                        prompt.append({"role": "user", "content": train_dataset["question"][random_index] + "\nOptions" + str(train_dataset["options"][random_index])})
                         prompt.append({"role": "assistant", "content": train_dataset["rationale"][random_index] + "#### Answer: " + train_dataset["correct"][random_index]})
                 prompt.append({"role": "user", "content": batch["question"][i] + "\nOptions" + batch["options"][i]})
                 prompts.append(prompt)

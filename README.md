@@ -30,23 +30,7 @@ Line 98: Increase the training epochs to ~6
 Line 152: Change the saving path
 
 ## Testing code
-Line 21, 47, 57: Change the base model to the English version of BGE. (BAAI/bge-large-en-v1.5)
+Use rag_testing_{task_name}.py scripts.
 
-Line 51: Change the model path to your trained model
-
-Line 61, 66: Change the dataset and embedding path for different tasks
-
-Line 168-171: Different dataset have different collate_fn. Should write for different datasets.
-
-Line 186: If use untrained BGE model, set retriever_trained=False, model_modified=False. If use trained model, set retriever_trained=True, model_modified=True.
-
-Line 188: Change the Chinese LLM to an English LLM (e.g. LLama 3.2 1B).
-
-Line 195: Change dataset.
-
-Line 199: Change path.
-
-Line 207-208: Different datasets have different keys for data.
-
-Line 209-213: Code for random baseline.
+Use --random flag for random shots experiments. Use --retriever_trained and --model_modified for retrieval with trained model experiments. The trained retriever can be found here: https://huggingface.co/xiaocong01/BGE-large-en-v1.5-Computational-Graph (English) and https://huggingface.co/xiaocong01/BGE-large-zh-v1.5-Computational-Graph (Chinese).
 

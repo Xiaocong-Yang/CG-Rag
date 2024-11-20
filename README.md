@@ -32,5 +32,5 @@ Line 152: Change the saving path
 ## Testing code
 Use rag_testing_{task_name}.py scripts.
 
-Use --random flag for random shots experiments. Use --retriever_trained and --model_modified for retrieval with trained model experiments. The trained retriever can be found here: https://huggingface.co/xiaocong01/BGE-large-en-v1.5-Computational-Graph (English) and https://huggingface.co/xiaocong01/BGE-large-zh-v1.5-Computational-Graph (Chinese).
+Use --random flag for random shots experiments. Use --retriever_trained and --model_modified for retrieval with trained model experiments. The trained retriever can be found here: https://huggingface.co/xiaocong01/BGE-large-en-v1.5-Computational-Graph (English) and https://huggingface.co/xiaocong01/BGE-large-zh-v1.5-Computational-Graph (Chinese). The data for ape210k can be found at https://github.com/Chenny0808/ape210k/tree/master/data.
 
